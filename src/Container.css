@@ -11,6 +11,9 @@
 .nav-items > ul{
     display: flex;
 }
+.nav-li{
+    padding: 10px;
+}
 .nav-items > ul > li{
     padding: 10px;
     margin: 10px;
