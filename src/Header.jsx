@@ -1,25 +1,30 @@
 import { Link } from "react-router-dom";
-import "./Container.css";
+import { useContext } from "react";
+import JustContext from "./util/UserContext";
+import { useSelector } from "react-redux";
 
 export const Header = () => {
+  const cartItems = useSelector((store) => store.cart.items);
+  const { loggedInUser } = useContext(JustContext);
   return (
-    <div className="header">
+    <div className="flex justify-between bg-orange-200">
       <img
-        className="nav-logo"
+        className="size-32"
         alt="logo"
         src="https://www.creativefabrica.com/wp-content/uploads/2018/10/Chef-restaurant-logo-by-DEEMKA-STUDIO-4.jpg"
       ></img>
-      <div className="nav-items">
-        <ul>
-          <Link to="/about">
-            <li className="nav-li">Home</li>
+      <div>
+        <ul className="flex">
+          <Link to="/">
+            <li className="m-4 underline">Home</li>
+          </Link>
+          <Link to="/cart">
+            <li className="m-4 underline">Cart({cartItems.length})</li>
           </Link>
           <Link to="/about">
-            <li>Contact</li>
+            <li className="m-4 underline">About</li>
           </Link>
-          <Link to="/about">
-            <li>About</li>
-          </Link>
+          <li className="m-4 underline">{loggedInUser}</li>
         </ul>
       </div>
     </div>

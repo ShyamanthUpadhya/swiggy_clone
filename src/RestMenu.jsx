@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import MenuAcc from "./MenuAcc";
 
 const RestMenu = () => {
   const [restMenu, setRestMenu] = useState("");
-  const [restName, setRestName] = useState("");
+  const [showIndex, setShowIndex] = useState(null);
+
   const { resId } = useParams();
   useEffect(() => {
     fetchData();
@@ -18,19 +20,35 @@ const RestMenu = () => {
     );
     const json = await data.json();
     setRestMenu(
-      json?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card
-        ?.card
+      json.data.cards[4].groupedCard.cardGroupMap.REGULAR.cards.filter(
+        (card) => {
+          return (
+            card?.card?.card?.["@type"] ===
+            "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+          );
+        }
+      )
     );
-    setRestName(json?.data?.cards[0]?.card?.card?.text);
   };
 
   return restMenu === "" ? (
-    <div></div>
+    <div className="spinner-border" role="status">
+      <span className="sr-only">Loading...</span>
+    </div>
   ) : (
-    <div>
-      <h1>{restName}</h1>
-      {restMenu?.itemCards?.map((res) => {
-        return <li>{res?.card?.info?.name}</li>;
+    <div className="items-center">
+      {restMenu.map((each, index) => {
+        return (
+          <MenuAcc
+            key={index}
+            title={each.card.card.title}
+            itemCards={each.card.card.itemCards}
+            showIndex={showIndex === index ? true : false}
+            setShowIndex={() =>
+              showIndex === index ? setShowIndex(null) : setShowIndex(index)
+            }
+          />
+        );
       })}
     </div>
   );
